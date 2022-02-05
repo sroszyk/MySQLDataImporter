@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using MySQLDataImport.Models;
+using System.Collections.Generic;
+using System.IO;
 
 IConfiguration config = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
