@@ -23,5 +23,10 @@ namespace MySQLDataImport.Models
         public double? WysokoscWplatyOgolem { get; set; }
         public double? WysokoscWplatyWtZalegl { get; set; }
         public double? Saldo { get; set; }
+        public string Miasto { get; set; }
+        public string Ulica { get; set; }
+        public string KodPocztowy { get; set; }
+
+        public virtual ICollection<Dzialki> Dzialki { get; set; } = new List<Dzialki>();
     }
 }

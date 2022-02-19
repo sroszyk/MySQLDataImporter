@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Configuration;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
@@ -9,9 +9,10 @@ namespace MySQLDataImport.Models
     public partial class mydatabaseContext : DbContext
     {
         private readonly string connectionString;
-        public mydatabaseContext(string connectionString)
+
+        public mydatabaseContext(string conntectionstring)
         {
-            this.connectionString = connectionString;
+            connectionString = conntectionstring;
         }
 
         public mydatabaseContext(DbContextOptions<mydatabaseContext> options)
@@ -19,19 +20,36 @@ namespace MySQLDataImport.Models
         {
         }
 
+        public virtual DbSet<Dzialki> Dzialkis { get; set; }
         public virtual DbSet<Gwtable> Gwtables { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseMySQL(connectionString);
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Dzialki>(entity =>
+            {
+                entity.HasKey(e => e.Iddzialki)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("dzialki");
+
+                entity.HasIndex(e => e.PozRej, "PozRej");
+
+                entity.Property(e => e.Iddzialki).HasColumnName("iddzialki");
+
+                entity.Property(e => e.NrDzialki).HasMaxLength(45);
+
+                entity.HasOne(e => e.Gwtable).WithMany(e => e.Dzialki).HasForeignKey(e => e.PozRej);
+            });
+
+
             modelBuilder.Entity<Gwtable>(entity =>
             {
                 entity.HasKey(e => e.Idgwtable)
@@ -39,9 +57,17 @@ namespace MySQLDataImport.Models
 
                 entity.ToTable("gwtable");
 
+                entity.HasIndex(e => e.NrKolejny, "part_of_name");
+
+                entity.HasIndex(e => e.PozRej, "poz_rej_idx");
+
                 entity.Property(e => e.Idgwtable).HasColumnName("idgwtable");
 
                 entity.Property(e => e.DodatkoweObciazenieNalezn).HasColumnName("DodatkoweObciazenieNalezn.");
+
+                entity.Property(e => e.KodPocztowy).HasMaxLength(150);
+
+                entity.Property(e => e.Miasto).HasMaxLength(150);
 
                 entity.Property(e => e.NazwaWsiLubUlicyNumerDomu).HasMaxLength(150);
 
@@ -58,6 +84,8 @@ namespace MySQLDataImport.Models
                 entity.Property(e => e.UdzialUlamkowyWpozRej)
                     .HasMaxLength(10)
                     .HasColumnName("UdzialUlamkowyWPoz.rej");
+
+                entity.Property(e => e.Ulica).HasMaxLength(150);
 
                 entity.Property(e => e.WysokoscWplatyWtZalegl).HasColumnName("WysokoscWplatyWT.Zalegl");
 

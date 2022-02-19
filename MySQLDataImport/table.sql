@@ -15,5 +15,26 @@ CREATE TABLE `gwtable` (
   `WysokoscWplatyOgolem` double DEFAULT NULL,
   `WysokoscWplatyWT.Zalegl` double DEFAULT NULL,
   `SALDO` double DEFAULT NULL,
-  PRIMARY KEY (`idgwtable`)
-) ENGINE=InnoDB AUTO_INCREMENT=156 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `Miasto` varchar(150) DEFAULT NULL,
+  `Ulica` varchar(150) DEFAULT NULL,
+  `KodPocztowy` varchar(150) DEFAULT NULL,
+  PRIMARY KEY (`idgwtable`),
+  KEY `part_of_name` (`Nr.kolejny`),
+  KEY `poz_rej_idx` (`Poz.rej`)
+);
+
+CREATE TABLE `dzialki` (
+  `iddzialki` int NOT NULL,
+  `NrDzialki` varchar(45) DEFAULT NULL,
+  `PowierzchOgolem` double DEFAULT NULL,
+  `PowOdwodnRowami` double DEFAULT NULL,
+  `PowierzchnNawadn` double DEFAULT NULL,
+  `UdzialProcentowy` double DEFAULT NULL,
+  `OgolemZmeliorowane` double DEFAULT NULL,
+  `PozRej` int DEFAULT NULL,
+  PRIMARY KEY (`iddzialki`)
+);
+ALTER TABLE `mydatabase`.`dzialki` 
+ADD COLUMN `PowerzchnDrenowana` DOUBLE NULL AFTER `PozRej`;
+ALTER TABLE `mydatabase`.`dzialki` 
+CHANGE COLUMN `iddzialki` `iddzialki` INT NOT NULL AUTO_INCREMENT ;
